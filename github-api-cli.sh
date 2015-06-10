@@ -3,7 +3,7 @@
 repo="WhiteHouse"
 item_count=4
 
-function isDivisibleBy {
+function getTopIssues {
   # Get the issues from a repo
   all_issues=$( curl -s https://api.github.com/repos/$repo/petitions/issues )
   # Get count of issues
@@ -18,6 +18,6 @@ function isDivisibleBy {
   echo "$issue_comments_title" | sort -r | head -n $item_count | column -t -s $'\t'
 }
 
-isDivisibleBy
+getTopIssues
 
 all_pull_requests=$( curl -s https://api.github.com/repos/WhiteHouse/petitions/pulls )
