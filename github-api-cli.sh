@@ -41,12 +41,7 @@ function getTopPulls {
   echo "$pulls_comments_title" | sort -r | head -n $item_count | column -t -s $'\t'
 }
 
-####################
-### Start script ###
-####################
-# immutables
-arguments_required=4
-
+# Define helpText function
 function helpText {
   echo -e "Usage: ./github-api-cli.sh [mode] [org] [repo] [output count]"
   echo "mode: there are two modes [issues|pulls]"
@@ -54,6 +49,12 @@ function helpText {
   echo "repo: specify a public repo"
   echo "output count: specify how many lines of output sans header"
 }
+
+####################
+### Start script ###
+####################
+# immutables
+arguments_required=4
 
 [[ $# -ne $arguments_required ]] && { echo -e "\nERROR: FOUR OPTIONS ARE REQUIRED\n"; helpText; exit 1; } 
 
