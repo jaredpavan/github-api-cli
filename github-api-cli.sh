@@ -24,6 +24,7 @@ item_count=$4+1 # Enable print of header + $item_count below
 # Build url
 url="https://api.github.com/repos/$org/$repo/$mode"
 
+# Defining function to grab issues with the most chatter
 function getTopIssues {
   # Get the issues from a repo
   all_issues=$( curl -s $url )
@@ -32,7 +33,7 @@ function getTopIssues {
   # Create list
   issue_comments_title=$(echo -e "Comments\tIssue Title\n\r")
   for idx in $(seq 0 $all_issues_count); do
-    issue_comments_title="$issue_comments_title$(echo -e '\n\r')"
+    issue_comments_title="$issue_comments_title$( echo -e '\n\r' )"
     issue_comments_title="$issue_comments_title$( echo -e $( echo $all_issues | jq .[$idx].comments )'\t'$( echo $all_issues | jq .[$idx].title ))"
   done
 
@@ -40,6 +41,27 @@ function getTopIssues {
   echo "$issue_comments_title" | sort -r | head -n $item_count | column -t -s $'\t'
 }
 
-getTopIssues
+# Defining function to grab pull requests with the most chatter
+function getTopPulls {
+  # Get the pull requests from a repo
+  all_pulls=$( curl -s $url )
+  # Get count of pull requests
+  all_pulls_count=$( echo $all_pulls | jq 'length - 1' )
+  # Create list
+  pulls_comments_title=$(echo -e "Comments\tPR Title\n\r")
+  for idx in $(seq 0 $all_pulls_count); do
+    # Get comment count
+    comments_url=$( echo $all_pulls | jq -r .[$idx].comments_url )
+    comments=$( curl -s $comments_url )
+    comments_count=$( echo $comments | jq length )
 
-all_pull_requests=$( curl -s https://api.github.com/repos/WhiteHouse/petitions/pulls )
+    # Assemble table
+    pulls_comments_title="$pulls_comments_title$( echo -e '\n\r' )"
+    pulls_comments_title="$pulls_comments_title$( echo -e $comments_count'\t'$( echo $all_pulls | jq .[$idx].title ))"
+  done
+
+  # Print the top $item_count items
+  echo "$pulls_comments_title" | sort -r | head -n $item_count | column -t -s $'\t'
+}
+
+getTopPulls
