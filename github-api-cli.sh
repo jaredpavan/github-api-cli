@@ -1,28 +1,6 @@
 #!/bin/bash
 
-# immutables
-arguments_required=4
-
-function helpText {
-  echo -e "Usage: ./github-api-cli.sh [mode] [org] [repo] [output count]"
-  echo "mode: there are two modes [issues|pulls]"
-  echo "org: specify an org"
-  echo "repo: specify a public repo"
-  echo "output count: specify how many lines of output sans header"
-}
-
-[[ $# -ne $arguments_required ]] && { echo -e "\nERROR: Four options are required\n"; helpText; exit 1; } 
-
-# Get options
-mode=$1
-org=$2
-repo=$3
-declare -i item_count # Declare $item_count as a number
-item_count=$4+1 # Enable print of header + $item_count below
-
-# Build url
-url="https://api.github.com/repos/$org/$repo/$mode"
-
+# Define mode functions
 # Defining function to grab issues with the most chatter
 function getTopIssues {
   # Get the issues from a repo
@@ -63,6 +41,32 @@ function getTopPulls {
   echo "$pulls_comments_title" | sort -r | head -n $item_count | column -t -s $'\t'
 }
 
+####################
+### Start script ###
+####################
+# immutables
+arguments_required=4
+
+function helpText {
+  echo -e "Usage: ./github-api-cli.sh [mode] [org] [repo] [output count]"
+  echo "mode: there are two modes [issues|pulls]"
+  echo "org: specify an org"
+  echo "repo: specify a public repo"
+  echo "output count: specify how many lines of output sans header"
+}
+
+[[ $# -ne $arguments_required ]] && { echo -e "\nERROR: FOUR OPTIONS ARE REQUIRED\n"; helpText; exit 1; } 
+
+# Get options
+mode=$1
+org=$2
+repo=$3
+declare -i item_count # Declare $item_count as a number
+item_count=$4+1 # Enable print of header + $item_count below
+
+# Build url
+url="https://api.github.com/repos/$org/$repo/$mode"
+
 # Run the selected mode's function
 case "$mode" in
   issues)
@@ -72,7 +76,7 @@ case "$mode" in
     getTopPulls
     ;;
   *)
-    echo -e "\nERROR: invalid mode\n"
+    echo -e "\nERROR: INVALID MODE\n"
     helpText
     ;;
 esac
