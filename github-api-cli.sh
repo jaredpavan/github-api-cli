@@ -4,15 +4,14 @@
 arguments_required=4
 
 function helpText {
-  echo -e "\nERROR: Four options are required\n"
   echo -e "Usage: ./github-api-cli.sh [mode] [org] [repo] [output count]"
-  echo "mode: there are two modes, issues or pulls"
+  echo "mode: there are two modes [issues|pulls]"
   echo "org: specify an org"
   echo "repo: specify a public repo"
   echo "output count: specify how many lines of output sans header"
 }
 
-[[ $# -ne $arguments_required ]] && { helpText; exit 1; } 
+[[ $# -ne $arguments_required ]] && { echo -e "\nERROR: Four options are required\n"; helpText; exit 1; } 
 
 # Get options
 mode=$1
@@ -64,4 +63,16 @@ function getTopPulls {
   echo "$pulls_comments_title" | sort -r | head -n $item_count | column -t -s $'\t'
 }
 
-getTopPulls
+# Run the selected mode's function
+case "$mode" in
+  issues)
+    getTopIssues
+    ;;
+  pulls)
+    getTopPulls
+    ;;
+  *)
+    echo -e "\nERROR: invalid mode\n"
+    helpText
+    ;;
+esac
