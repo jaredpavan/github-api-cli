@@ -1,5 +1,5 @@
 # GitHub API Command Line Interface (test)
-This is a command line interface (CLI) written in bash to test out working with GitHub's API on public repos. Given commands, it will print out n issues or pulls ordered by their comment activity. It's functionality is currently limited and is meant for a proof of concept.
+This is a command line interface (CLI) written in bash to test out working with GitHub's API on public repos. Given commands, it will print out *n* issues or pulls ordered by their comment activity. Its functionality is currently limited and is meant for a proof of concept.
 
 It could also use some more error handling (like Developer Over Limit and repo "Not Found" catchers)
 
